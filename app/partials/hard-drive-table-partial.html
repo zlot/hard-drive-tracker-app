@@ -1,17 +1,44 @@
-<table class="table">
-  <tr>
-    <th colspan=4>Hard Drives</th>
-  </tr>
-  <tr>
-    <th>Name</th>
-    <th>Size</th>
-    <th>Notes</th>
-    <th></th>
-  </tr>
-  <tr ng-repeat="hardDrive in hardDrives">
-    <td>{{hardDrive.name}}</td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-</table>
+<div class="panel panel-primary">
+  <div class="panel panel-heading">Hard Drives</div>
+  <div class="panel-body">
+    This is a panel heading. Add button can go here?
+  </div>
+  
+  <table id="hard-drive-table" class="table table-striped table-hover">
+      <tr>
+        <th></th>
+        <th>Hard Drive Name</th>
+        <th colspan="4">Event</th>
+      </tr>
+      <tr ng-repeat="hardDrive in hardDrives">
+        <td><button type="button" class="btn btn-success" ng-click="removeEvent(hardDrive)">I have returned</button></td>
+        <td id="hard-drive-name">{{hardDrive.name}}</td>
+        <td ng-hide="hardDrive.event.location" colspan="3">
+          <button type="button" class="btn btn-success" ng-click="addEvent(hardDrive)">Send me out</button>
+        </td>
+        <td id="hard-drive-event-location" ng-show="hardDrive.event.location">{{hardDrive.event.location}}</td>
+        <td id="hard-drive-event-date" ng-show="hardDrive.event.date">{{hardDrive.event.date | date : 'mediumDate'}}</td>
+        <td id="hard-drive-event-notes" ng-show="hardDrive.event.notes">{{hardDrive.event.notes}}</td>
+      </tr>
+    </table>  
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
