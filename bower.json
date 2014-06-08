@@ -1,0 +1,17 @@
+{
+  "name": "HardDriveApp",
+  "description": "A small app for The Monkey's Cobbler to keep track of Hard Drives sent out to clients.",
+  "version": "0.0.0",
+  "homepage": "http://www.themonkeyscobbler.com.au",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular": "1.2.x",
+    "angular-route": "1.2.x",
+    "angular-loader": "1.2.x",
+    "angular-mocks": "~1.2.x",
+    "html5-boilerplate": "~4.3.0",
+    "bootstrap": "3.1.x",
+    "jquery": "2.1.x"
+  }
+}
