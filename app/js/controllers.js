@@ -4,7 +4,9 @@
 
 angular.module('myApp.controllers', [])
   .controller('TableCtrl', ['$scope', function($scope) {
-    // controls the listing of the hard drive table
+
+    // DEBUGGING MODAL ONLY! REMOVE THIS AND PLACE IN addEvent() CODE WHEN READY!
+    $('#add-event-modal').modal();
     
     // hardDrives listing
     $scope.hardDrives = [
@@ -26,7 +28,12 @@ angular.module('myApp.controllers', [])
     
     $scope.addEvent = function(hardDrive) {
       // create a modal popup
-      $('#myModal').modal();
+      $('#add-event-modal').modal();
+      $('#date').datepicker({
+          format: "MM d, yyyy",
+          weekStart: 1,
+          todayBtn: "linked"
+      });
     }
     
       
