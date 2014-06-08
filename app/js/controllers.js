@@ -6,7 +6,12 @@ angular.module('myApp.controllers', [])
   .controller('TableCtrl', ['$scope', function($scope) {
 
     // DEBUGGING MODAL ONLY! REMOVE THIS AND PLACE IN addEvent() CODE WHEN READY!
-    $('#add-event-modal').modal();
+    //$('#add-event-modal').modal();
+    
+    // Empty event object to submit as event when form is filled in.
+    // will have properties: location, date, notes.
+    event = {};
+
     
     // hardDrives listing
     $scope.hardDrives = [
@@ -26,7 +31,7 @@ angular.module('myApp.controllers', [])
       hardDrive.event = [];
     };
     
-    $scope.addEvent = function(hardDrive) {
+    $scope.bringUpForm = function(hardDrive) {
       // create a modal popup
       $('#add-event-modal').modal();
       $('#date').datepicker({
@@ -34,7 +39,12 @@ angular.module('myApp.controllers', [])
           weekStart: 1,
           todayBtn: "linked"
       });
-    }
-    
       
+      
+    };
+    
+    $scope.addEvent = function() {
+        
+    };
+    
   }]);
