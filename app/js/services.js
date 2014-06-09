@@ -7,20 +7,14 @@
 // In this case it is a simple value service.
 angular.module('myApp.services', [])
   .factory('eventService', function() {
+    // containers for the real json objects to be passed through.
     var hardDrive = {};
-    var event1 = {};
     return {
       setHardDrive: function(_hardDrive) {
         hardDrive = _hardDrive;
       },
-      setEvent: function(_event) {
-        event1 = _event;
-      },
       getHardDrive: function() {
         return hardDrive;
-      },
-      getEvent: function() {
-        return event1;
       }
     };
   })

@@ -98,6 +98,7 @@ angular.module('myApp.controllers', [])
       $scope.hardDrive = eventService.getHardDrive();
     });
     
+    
     $scope.validateForm = function(addEventForm) {
       submitPressedOnce = true;
       
@@ -127,14 +128,6 @@ angular.module('myApp.controllers', [])
         }
     });
     
-    
-    $scope.addEvent = function(event) {
-      // we have the hardDrive and the event, give to harddrive!
-      hardDrive.event = event;
-      // clear out the modal form and dismiss
-      this.event = {};
-      $('#add-event-modal').modal('hide');
-    };
     $scope.clearForm = function() {
       this.event = {};
       $('#date').val('');
