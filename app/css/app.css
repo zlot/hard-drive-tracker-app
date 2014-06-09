@@ -1,18 +1,5 @@
 /* app css stylesheet */
 
-#hard-drive-table {
-  table-layout: fixed;
-}
-#hard-drive-event-location {
-  width: 140px;
-}
-#hard-drive-event-date {
-  width: 100px;
-}
-#hard-drive-event-notes {
-  width: 600px;
-}
-
 
 .bg-primary {
   color: #fff;
