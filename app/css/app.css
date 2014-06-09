@@ -1,7 +1,7 @@
 /* app css stylesheet */
 
 #hard-drive-table {
-  
+  table-layout: fixed;
 }
 #hard-drive-event-location {
   width: 140px;

@@ -3,15 +3,11 @@
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-  .controller('TableCtrl', ['$scope', function($scope) {
+  .controller('TableCtrl', ['$scope', 'eventService', function($scope, eventService) {
 
     // DEBUGGING MODAL ONLY! REMOVE THIS AND PLACE IN addEvent() CODE WHEN READY!
-    //$('#add-event-modal').modal();
+    // $('#add-event-modal').modal();
     
-    // Empty event object to submit as event when form is filled in.
-    // will have properties: location, date, notes.
-    event = {};
-
     
     // hardDrives listing
     $scope.hardDrives = [
@@ -42,10 +38,44 @@ angular.module('myApp.controllers', [])
      
       
       
+      // $('#date').datepicker({
+          // format: "MM d, yyyy",
+          // weekStart: 1,
+          // todayBtn: "linked"
+      // }).on('changeDate', function(e){
+          // // $('#date-input').attr("value", e.date);
+          // document.getElementById('date-input').setAttribute("value", e.date);
+          // // alert(e.date);
+      // });
+//       
+      // give selected hardDrive to eventService, ready for a form submission
+      eventService.setHardDrive(hardDrive);
+      $scope.$broadcast('modalActivated');
     };
     
-    $scope.addEvent = function() {
-        
+  }])
+  .controller('ModalCtrl',['$scope', 'eventService', function($scope, eventService) {
+    // Empty event object to submit as event when form is filled in.
+    // Note that this is ng-model bounded to the form!
+    var event = {};
+    
+    var hardDrive = $scope.hardDrive; 
+    // when modal is activated, get hard drive that was selected.
+    // the hard drive is passed from bringUpForm to here, via the eventService.
+    $scope.$on('modalActivated', function(response) {
+      hardDrive = eventService.getHardDrive();
+      
+    });
+    
+    $scope.addEvent = function(event) {
+      // we have the hardDrive and the event, give to harddrive!
+      hardDrive.event = event;
+      // clear out the modal form and dismiss
+      this.event = {};
+      $('#add-event-modal').modal('hide');
+    };
+    $scope.clearForm = function() {
+      this.event = {};
     };
     
   }]);
