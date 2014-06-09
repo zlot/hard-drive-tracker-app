@@ -1,5 +1,11 @@
 /* app css stylesheet */
 
+#hard-drive-table td {
+  /* vertical-align:middle; */
+}
+table .btn{
+  margin-top: 3px;
+}
 
 .bg-primary {
   color: #fff;

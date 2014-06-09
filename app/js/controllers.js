@@ -106,7 +106,6 @@ angular.module('myApp.controllers', [])
     });
     
     
-    
     $scope.addEvent = function(event) {
       // we have the hardDrive and the event, give to harddrive!
       hardDrive.event = event;
