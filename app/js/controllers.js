@@ -39,6 +39,7 @@ angular.module('myApp.controllers', [])
           weekStart: 1,
           todayBtn: "linked"
       });
+     
       
       
     };
