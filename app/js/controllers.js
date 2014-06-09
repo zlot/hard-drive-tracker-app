@@ -61,32 +61,37 @@ angular.module('myApp.controllers', [])
     
   }])
   .controller('ModalCtrl',['$scope', 'eventService', function($scope, eventService) {
+    
+    var submitPressedOnce = false;
+    
     $scope.date = new Date();
     
     // Empty event object to submit as event when form is filled in.
     // Note that this is ng-model bounded to the form!
     $scope.event = {};
     
-    var hardDrive = $scope.hardDrive; 
     // when modal is activated, get hard drive that was selected.
     // the hard drive is passed from bringUpForm to here, via the eventService.
     $scope.$on('modalActivated', function(response) {
-      hardDrive = eventService.getHardDrive();
-      
+      $scope.hardDrive = eventService.getHardDrive();
     });
     
     $scope.validateForm = function(addEventForm) {
+      submitPressedOnce = true;
+      
       if(addEventForm.$valid) {
         $scope.event.date = $scope.date;
         
         // we have the hardDrive and the event, give to harddrive!
-        hardDrive.event = $scope.event;
+        $scope.hardDrive.event = $scope.event;
         // clear out the modal form and dismiss
         $scope.event = {};
         $('#add-event-modal').modal('hide');
       } else {
         // not valid, don't submit
         $('#submit').removeClass('btn-primary').addClass('btn-danger');
+        // turn invalid fields dirty to get colorizing
+        $('.ng-pristine').removeClass('ng-pristine').addClass('ng-dirty');
       }
     };
     
