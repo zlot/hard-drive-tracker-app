@@ -14,6 +14,50 @@
 }
 
 
+.bg-primary {
+  color: #fff;
+  background-color: #428bca;
+}
+a.bg-primary:hover {
+  background-color: #3071a9;
+}
+.ng-valid-required.ng-dirty {
+  border-color: #dff0d8;
+}
+.ng-valid-required.ng-dirty:hover {
+  border-color: #c1e2b3;
+}
+.bg-info {
+  background-color: #d9edf7;
+}
+a.bg-info:hover {
+  background-color: #afd9ee;
+}
+.bg-warning {
+  background-color: #fcf8e3;
+}
+a.bg-warning:hover {
+  background-color: #f7ecb5;
+}
+
+
+input.ng-invalid.ng-dirty {
+  background-color: #f2dede;
+}
+input.ng-invalid.ng-dirty:hover {
+  background-color: #e4b9b9;
+}
+textarea.ng-invalid.ng-dirty {
+  background-color: #f2dede;
+}
+textarea.ng-invalid.ng-dirty:hover {
+  background-color: #e4b9b9;
+}
+
+
+
+
+
 .menu {
   list-style: none;
   border-bottom: 0.1em solid black;

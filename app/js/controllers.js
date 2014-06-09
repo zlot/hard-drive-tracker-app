@@ -48,6 +48,12 @@ angular.module('myApp.controllers', [])
           // // alert(e.date);
       // });
 //       
+      $('.date').datepicker({
+          format: "yyyy-mm-dd",
+          weekStart: 1,
+          todayBtn: "linked",
+          todayHighlight: true
+      });
       // give selected hardDrive to eventService, ready for a form submission
       eventService.setHardDrive(hardDrive);
       $scope.$broadcast('modalActivated');
@@ -55,9 +61,11 @@ angular.module('myApp.controllers', [])
     
   }])
   .controller('ModalCtrl',['$scope', 'eventService', function($scope, eventService) {
+    $scope.date = new Date();
+    
     // Empty event object to submit as event when form is filled in.
     // Note that this is ng-model bounded to the form!
-    var event = {};
+    $scope.event = {};
     
     var hardDrive = $scope.hardDrive; 
     // when modal is activated, get hard drive that was selected.
@@ -66,6 +74,33 @@ angular.module('myApp.controllers', [])
       hardDrive = eventService.getHardDrive();
       
     });
+    
+    $scope.validateForm = function(addEventForm) {
+      if(addEventForm.$valid) {
+        $scope.event.date = $scope.date;
+        
+        // we have the hardDrive and the event, give to harddrive!
+        hardDrive.event = $scope.event;
+        // clear out the modal form and dismiss
+        $scope.event = {};
+        $('#add-event-modal').modal('hide');
+      } else {
+        // not valid, don't submit
+        $('#submit').removeClass('btn-primary').addClass('btn-danger');
+      }
+    };
+    
+    $scope.$watch('addEventForm.$valid', function(valid) {           
+        //$scope.valid = newVal;
+        // $scope.informationStatus = true;
+        if(valid) {
+          $('#submit').removeClass('btn-danger').addClass('btn-success');
+        } else {
+          $('#submit').removeClass('btn-success').addClass('btn-danger');
+        }
+    });
+    
+    
     
     $scope.addEvent = function(event) {
       // we have the hardDrive and the event, give to harddrive!
@@ -76,6 +111,7 @@ angular.module('myApp.controllers', [])
     };
     $scope.clearForm = function() {
       this.event = {};
+      $('#date').val('');
     };
     
   }]);
