@@ -23,4 +23,9 @@ angular.module('myApp.services', [])
         return event1;
       }
     };
-  });
+  })
+  .factory("FirebaseService", ["$firebase", function($firebase) {
+    var firebaseRef = new Firebase("MY FIREBASE.firebaseio.com/hardDrives");
+    return $firebase(firebaseRef);
+  }])
+  ;
