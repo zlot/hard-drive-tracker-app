@@ -4,12 +4,12 @@
 
 angular.module('myApp.controllers', [])
   .controller('TableCtrl', ['$scope', 'eventService', 'FirebaseService', function($scope, eventService, firebaseService) {
-
     
     // hardDrives listing
     // $scope.hardDrives = [
       // {
         // name: "Hard Drive 1",
+        // arrayPosition: "0",
         // size: "500GB",
         // notes: "This is a test note.",
         // event: {
@@ -20,6 +20,7 @@ angular.module('myApp.controllers', [])
       // },
       // {
         // name: "Hard Drive 2",
+        // arrayPosition: "1",
         // size: "1TB",
         // notes: "This is a test note.",
         // event: {
@@ -30,6 +31,7 @@ angular.module('myApp.controllers', [])
       // },
       // {
         // name: "Hard Drive 3",
+        // arrayPosition: "2",
         // size: "2TB",
         // notes: "This is a test note.",
         // event: {
@@ -39,13 +41,13 @@ angular.module('myApp.controllers', [])
         // }
       // },           
     // ];
-//     
-    // firebaseService.$set($scope.hardDrives);
+    
+    // bind my model to firebaseService.
     $scope.hardDrives = firebaseService;
-    console.log($scope.hardDrives);
-
+    // firebaseService.$set($scope.hardDrives);
     
     $scope.removeEvent = function(hardDrive) {
+      firebaseService.$child(hardDrive.arrayPosition).$remove("event");
       hardDrive.event = [];
     };
     
@@ -82,7 +84,7 @@ angular.module('myApp.controllers', [])
     };
     
   }])
-  .controller('ModalCtrl',['$scope', 'eventService', function($scope, eventService) {
+  .controller('ModalCtrl',['$scope', 'eventService', 'FirebaseService', function($scope, eventService, firebaseService) {
     
     var submitPressedOnce = false;
     
@@ -106,9 +108,10 @@ angular.module('myApp.controllers', [])
         $scope.event.date = $scope.date;
         
         // we have the hardDrive and the event, give to harddrive!
-        $scope.hardDrive.event = $scope.event;
+        firebaseService.$child($scope.hardDrive.arrayPosition).$update({event: $scope.event});
+        
         // clear out the modal form and dismiss
-        $scope.event = {};
+        $scope.clearForm();
         $('#add-event-modal').modal('hide');
       } else {
         // not valid, don't submit
@@ -129,8 +132,10 @@ angular.module('myApp.controllers', [])
     });
     
     $scope.clearForm = function() {
+      // reset form
       this.event = {};
       $('#date').val('');
+      $scope.addEventForm.$setPristine();
     };
     
   }]);
