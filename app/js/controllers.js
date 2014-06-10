@@ -12,11 +12,6 @@ angular.module('myApp.controllers', [])
     // firebaseService.$set($scope.hardDrives);
     // hardDrivesService.setToFirebase();
     
-    $scope.removeEvent = function(hardDrive) {
-      firebaseService.$child(hardDrive.arrayPosition).$remove("event");
-      hardDrive.event = [];
-    };
-    
     $scope.bringUpForm = function(hardDrive) {
       // create a modal popup
       $('#add-event-modal').modal();
@@ -47,6 +42,11 @@ angular.module('myApp.controllers', [])
       // give selected hardDrive to eventService, ready for a form submission
       eventService.setHardDrive(hardDrive);
       $scope.$broadcast('modalActivated');
+    };
+    
+    $scope.removeEvent = function(hardDrive) {
+      firebaseService.$child(hardDrive.arrayPosition).$remove("event");
+      hardDrive.event = [];
     };
     
   }])
