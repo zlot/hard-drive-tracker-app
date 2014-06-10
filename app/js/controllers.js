@@ -6,10 +6,10 @@ angular.module('myApp.controllers', [])
   .controller('TableCtrl', ['$scope', 'eventService', 'FirebaseService', 'HardDrivesService', function($scope, eventService, firebaseService, hardDrivesService) {
     
     // either bind model to local hardDrives for testing:
-    $scope.hardDrives = hardDrivesService.get();
+    // $scope.hardDrives = hardDrivesService.get();
     // or bind to firebaseService.
-    // $scope.hardDrives = firebaseService;
-    // firebaseService.$set($scope.hardDrives);
+    $scope.hardDrives = firebaseService;
+    // override and set local hardDrives json to firebase:
     // hardDrivesService.setToFirebase();
     
     $scope.bringUpForm = function(hardDrive) {
