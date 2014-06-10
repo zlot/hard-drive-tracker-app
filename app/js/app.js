@@ -11,7 +11,7 @@ angular.module('hardDriveApp', [
   'myApp.controllers'
 ]).
 config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/view1', {templateUrl: 'partials/hard-drive-table-partial.html', 
+  $routeProvider.when('/', {templateUrl: 'partials/hard-drive-table-partial.html', 
       controller: 'TableCtrl'});
-  $routeProvider.otherwise({redirectTo: '/view1'});
+  $routeProvider.otherwise({redirectTo: '/'});
 }]);
