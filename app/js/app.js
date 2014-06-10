@@ -5,6 +5,7 @@
 angular.module('hardDriveApp', [
   'firebase',
   'ngRoute',
+  'ngAnimate',
   'myApp.filters',
   'myApp.services',
   'myApp.directives',
