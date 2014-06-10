@@ -1,5 +1,9 @@
 /* app css stylesheet */
 
+body {
+  margin-top: 1em;
+}
+
 #hard-drive-table td {
   /* vertical-align:middle; */
 }
@@ -7,33 +11,17 @@ table .btn{
   margin-top: 3px;
 }
 
-.bg-primary {
-  color: #fff;
-  background-color: #428bca;
+/* bootstrap overrides */
+.panel.panel-heading {
+  background-color: #111;
+  border-color: #111;
 }
-a.bg-primary:hover {
-  background-color: #3071a9;
-}
-.ng-valid-required.ng-dirty {
-  border-color: #dff0d8;
-}
-.ng-valid-required.ng-dirty:hover {
-  border-color: #c1e2b3;
-}
-.bg-info {
-  background-color: #d9edf7;
-}
-a.bg-info:hover {
-  background-color: #afd9ee;
-}
-.bg-warning {
-  background-color: #fcf8e3;
-}
-a.bg-warning:hover {
-  background-color: #f7ecb5;
+.panel.panel-primary {
+  border-color: #333;
 }
 
 
+/* form validation error colours */
 input.ng-invalid.ng-dirty {
   background-color: #f2dede;
 }
