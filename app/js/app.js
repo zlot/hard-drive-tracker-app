@@ -12,7 +12,15 @@ angular.module('hardDriveApp', [
   'myApp.controllers'
 ]).
 config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/', {templateUrl: 'partials/hard-drive-table-partial.html', 
-      controller: 'TableCtrl'});
+  $routeProvider.when('/', {
+      templateUrl: 'partials/hard-drive-table-partial.html', 
+      controller: 'TableCtrl'
+    }
+  );
+  $routeProvider.when('/log', {
+    templateUrl: 'partials/event-log-partial.html',
+    controller: 'EventLogCtrl'
+    }
+  );
   $routeProvider.otherwise({redirectTo: '/'});
 }]);

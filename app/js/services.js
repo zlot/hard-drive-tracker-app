@@ -76,10 +76,10 @@ angular.module('myApp.services', [])
     var eventLog = [
       {
         hardDrive: {},
-        location: "",
+        location: "location",
         date: Date.now(),
-        note: "",
-        returnedDate: ""
+        note: "this is a note of the event",
+        returnedDate: Date.now()
       }
     ];
     
@@ -89,6 +89,9 @@ angular.module('myApp.services', [])
       },
       push: function(event) {
         eventLog.push(event);
+      },
+      addHardDriveToLog: function(logId, hardDrive) {
+        eventLog[logId].hardDrive = hardDrive;
       },
       updateReturnedDate: function(logId, returnedDate) {
         eventLog[logId].returnedDate = returnedDate;

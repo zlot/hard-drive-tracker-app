@@ -19,9 +19,23 @@
   <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
 </head>
 <body>
+  <!--ngView is a directive that complements the $route service by including the 
+    rendered template of the current route into the main layout (index.html) file. 
+    Every time the current route changes, the included view changes with it according 
+    to the configuration of the $route service. -->
 
-  <div ng-view class="container"></div>
-
+  <div class="container">    
+    <div><img src="img/tmc_logo.png"/></div>
+    <a href="#/">Hard Drives</a> | 
+    <a href="#/log">Log</a>
+  
+    <div ng-view class="panel panel-primary"></div>
+    
+    <add-event-modal></add-event-modal>
+    <!-- <debug-hard-drives></debug-hard-drives> -->
+    <pre debug-event-log></pre>
+    <pre debug-hard-drives></pre>
+  </div>
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
   -->

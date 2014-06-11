@@ -40,6 +40,18 @@ angular.module('myApp.controllers', [])
     };
     
   }])
+  .controller('EventLogCtrl', ['$scope', 'eventService', 'EventLogService', 'HardDrivesService', function($scope, eventService, eventLogService, hardDrivesService) {
+    
+    // either bind model to local eventLog for testing:
+    $scope.eventLog = eventLogService.get();
+    // or bind to firebaseService.
+    //%%%%% $scope.eventLog = firebaseService;
+    // override and set local eventLogService json to firebase:
+    // eventLogService.setToFirebase();
+    
+  }])
+  
+  
   .controller('ModalCtrl',['$scope', 'eventService', 'EventLogService', 'FirebaseService', function($scope, eventService, eventLogService, firebaseService) {
     
     var submitPressedOnce = false;
@@ -79,7 +91,10 @@ angular.module('myApp.controllers', [])
       // get the id (array position) of log
       // set this as logId for event
       $scope.event.logId = eventLogService.get().length-1;
+      // add harddrive to the event log
+      eventLogService.addHardDriveToLog($scope.event.logId, $scope.hardDrive);
       
+      $scope.hardDrive = eventService.getHardDrive();
       // we have the hardDrive and the event, give to harddrive!
       $scope.hardDrive.event = $scope.event;
       // firebaseService.$child($scope.hardDrive.arrayPosition).$update({event: $scope.event});

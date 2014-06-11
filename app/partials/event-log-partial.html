@@ -1,0 +1,38 @@
+<div class="panel panel-heading">Event log (app v<span app-version></span>)</div>
+ <!-- <div class="panel-body">
+
+</div> -->
+
+<table id="hard-drive-table" class="table table-striped table-hover">
+ <colgroup>
+    <col style="width:12%">
+    <col style="width:15%">
+    <col style="width:15%">
+    <col style="width:15%">
+    <col style="width:43%">
+  </colgroup>
+
+  <tr>
+    <th>Hard Drive Name</th>
+    <th>Event</th>
+    <th>Date Sent</th>
+    <th>Note</th>
+    <th>Returned Date</th>
+  </tr>
+  <tr ng-repeat="event in eventLog">
+    <td id="hard-drive-name">
+      {{event.hardDrive.name}}
+      <!-- {{eventLoghardDrive.name}}<br> -->
+      <!-- <small>{{hardDrive.size}}</small><br> -->
+      <!-- <small>{{hardDrive.notes}}</small> -->
+    </td>
+    <td>
+      {{event.location}}
+    </td>
+    <td>{{event.date | date : 'mediumDate'}}</td>
+    <td>{{event.note}}</td>
+    <td>{{event.returnedDate | date : 'mediumDate'}}</td>
+  </tr>
+</table>  
+
+
