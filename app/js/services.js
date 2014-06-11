@@ -70,7 +70,36 @@ angular.module('myApp.services', [])
         firebaseService.$set(hardDrives);
       }
     };
-  }]);
+  }])
+  .factory("EventLogService", ["FirebaseService", function(firebaseService) {
+    // hardDrives listing
+    var eventLog = [
+      {
+        hardDrive: {},
+        location: "",
+        date: Date.now(),
+        note: "",
+        returnedDate: ""
+      }
+    ];
+    
+    return {
+      get: function() {
+        return eventLog;
+      },
+      push: function(event) {
+        eventLog.push(event);
+      },
+      updateReturnedDate: function(logId, returnedDate) {
+        eventLog[logId].returnedDate = returnedDate;
+      },
+      setToFirebase: function() {
+        firebaseService.$set(eventLog);
+      }
+    };
+  }])
+  
+  ;
 
             
 

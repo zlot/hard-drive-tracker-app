@@ -38,4 +38,22 @@ angular.module('myApp.directives', []).
       }
     };
   }])
+  .directive('debugEventLog', ['EventLogService', '$interval', function(eventLogService, $interval) {
+    // updates what the hardDrives local object looks like every 1000ms
+    return {
+      link: function(scope, element, attrs) {
+        function updateDisplay() {
+        element.text("eventLog local object: \t\r\n" + 
+          JSON.stringify(eventLogService.get(), null, '\t'));
+        };
+        
+        // todo:: can I place ModalCtrl or TableCtrl dependency for this directive;
+        //   then use a $scope.$watch on a button press?
+        // start the UI update process; save the timeoutId for canceling
+        $interval(function() {
+          updateDisplay(); // update DOM
+        }, 1000);        
+      }
+    };
+  }])  
   ;
