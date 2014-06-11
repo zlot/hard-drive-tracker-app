@@ -20,4 +20,22 @@ angular.module('myApp.directives', []).
       templateUrl: 'partials/add-form-modal-partial.html'
     };
   })
+  .directive('debugHardDrives', ['HardDrivesService', '$interval', function(hardDrivesService, $interval) {
+    // updates what the hardDrives local object looks like every 1000ms
+    return {
+      link: function(scope, element, attrs) {
+        function updateDisplay() {
+        element.text("hardDrives local object: \t\r\n" + 
+          JSON.stringify(hardDrivesService.get(), null, '\t'));
+        };
+        
+        // todo:: can I place ModalCtrl or TableCtrl dependency for this directive;
+        //   then use a $scope.$watch on a button press?
+        // start the UI update process; save the timeoutId for canceling
+        $interval(function() {
+          updateDisplay(); // update DOM
+        }, 1000);        
+      }
+    };
+  }])
   ;
