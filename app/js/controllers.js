@@ -16,12 +16,6 @@ angular.module('myApp.controllers', [])
       // create a modal popup
       $('#add-event-modal').modal();
       $('#date').datepicker({
-          format: "MM d, yyyy",
-          weekStart: 1,
-          todayBtn: "linked"
-      });
-     
-      $('.date').datepicker({
           format: "yyyy-mm-dd",
           weekStart: 1,
           todayBtn: "linked",
