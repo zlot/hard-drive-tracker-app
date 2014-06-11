@@ -13,6 +13,7 @@ npm install
 
 This will also call `bower install` to install app dependencies. To add more dependencies edit the `bower.json` and run `bower install` again.
 
+**note:** Make sure to use `angular#1.3.x`, not the stable version `1.2.x`. Only `1.3.x` allows `input=date` form validation.
 
 To run the application on a local server with the `npm` package `http-server`:
 ```
