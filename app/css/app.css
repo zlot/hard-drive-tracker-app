@@ -11,6 +11,10 @@ table .btn{
   margin-top: 3px;
 }
 
+.datepicker {
+  z-index: 2000 !important;
+}
+
 /* bootstrap overrides */
 .panel.panel-heading {
   background-color: #111;
