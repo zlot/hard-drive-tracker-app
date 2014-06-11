@@ -4,7 +4,12 @@
 
 angular.module('myApp.controllers', [])
   .controller('TableCtrl', ['$scope', 'eventService', 'EventLogService', 'FirebaseService', 'HardDrivesService', function($scope, eventService, eventLogService, firebaseService, hardDrivesService) {
-    
+    $('#date').datepicker({
+          format: "yyyy-mm-dd",
+          weekStart: 1,
+          todayBtn: "linked",
+          todayHighlight: true
+      });
     // either bind model to local hardDrives for testing:
     // $scope.hardDrives = hardDrivesService.get();
     // or bind to firebaseService.
@@ -15,12 +20,7 @@ angular.module('myApp.controllers', [])
     $scope.bringUpForm = function(hardDrive) {
       // create a modal popup
       $('#add-event-modal').modal();
-      $('#date').datepicker({
-          format: "yyyy-mm-dd",
-          weekStart: 1,
-          todayBtn: "linked",
-          todayHighlight: true
-      });
+      
       // give selected hardDrive to eventService, ready for a form submission
       eventService.setHardDrive(hardDrive);
       $scope.$broadcast('modalActivated');
@@ -102,7 +102,7 @@ angular.module('myApp.controllers', [])
     $scope.clearForm = function() {
       // reset form
       this.event = {};
-      $('#date').val('');
+      $('#date').datepicker('update', new Date());
       $scope.addEventForm.$setPristine();
     };
   }]);
