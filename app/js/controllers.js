@@ -21,18 +21,6 @@ angular.module('myApp.controllers', [])
           todayBtn: "linked"
       });
      
-      
-      
-      // $('#date').datepicker({
-          // format: "MM d, yyyy",
-          // weekStart: 1,
-          // todayBtn: "linked"
-      // }).on('changeDate', function(e){
-          // // $('#date-input').attr("value", e.date);
-          // document.getElementById('date-input').setAttribute("value", e.date);
-          // // alert(e.date);
-      // });
-//       
       $('.date').datepicker({
           format: "yyyy-mm-dd",
           weekStart: 1,
