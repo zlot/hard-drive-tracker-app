@@ -3,7 +3,22 @@ hard-drive-tracker-app
 
 Simple Hard Drive Tracker App using Angular.js &amp; Firebase, for The Monkey's Cobbler.
 
-Built from the [[angular-seed project|https://github.com/angular/angular-seed.git]]
+Built from the [angular-seed project](https://github.com/angular/angular-seed.git).
+
+Instructions
+------------
+```
+npm install
+```
+
+This will also call `bower install` to install app dependencies. To add more dependencies edit the `bower.json` and run `bower install` again.
+
+
+To run the application on a local server with the `npm` package `http-server`:
+```
+npm start
+```
+
 
 Todo
 ----
@@ -12,3 +27,4 @@ Todo
 *  Give an image to the hard drives also?
 *  Ability to edit the names of the hard drives / edit hard drive notes
 *  Ability to edit an event, after it's been created
+*  Log each time a hard drive is sent away / returned
