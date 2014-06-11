@@ -3,7 +3,7 @@
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-  .controller('TableCtrl', ['$scope', 'eventService', 'FirebaseService', 'HardDrivesService', function($scope, eventService, firebaseService, hardDrivesService) {
+  .controller('TableCtrl', ['$scope', 'eventService', 'EventLogService', 'FirebaseService', 'HardDrivesService', function($scope, eventService, eventLogService, firebaseService, hardDrivesService) {
     
     // either bind model to local hardDrives for testing:
     // $scope.hardDrives = hardDrivesService.get();
@@ -27,12 +27,20 @@ angular.module('myApp.controllers', [])
     };
     
     $scope.removeEvent = function(hardDrive) {
-      firebaseService.$child(hardDrive.arrayPosition).$remove("event");
+      // when hard drive has returned, update log event to define date
+      // for now, it will use date when clicked.
+      // ideally, should use date picker again to choose a date.
+      // find log date
+      eventLogService.updateReturnedDate(hardDrive.event.logId, Date.now());
+      
+      // firebaseService.$child(hardDrive.arrayPosition).$remove("event");
+      
+      
       hardDrive.event = [];
     };
     
   }])
-  .controller('ModalCtrl',['$scope', 'eventService', 'FirebaseService', function($scope, eventService, firebaseService) {
+  .controller('ModalCtrl',['$scope', 'eventService', 'EventLogService', 'FirebaseService', function($scope, eventService, eventLogService, firebaseService) {
     
     var submitPressedOnce = false;
     
@@ -55,12 +63,8 @@ angular.module('myApp.controllers', [])
       if(addEventForm.$valid) {
         $scope.event.date = $scope.date;
         
-        // we have the hardDrive and the event, give to harddrive!
-        firebaseService.$child($scope.hardDrive.arrayPosition).$update({event: $scope.event});
+        addEventToLog();
         
-        // clear out the modal form and dismiss
-        $scope.clearForm();
-        $('#add-event-modal').modal('hide');
       } else {
         // not valid, don't submit
         $('#submit').removeClass('btn-primary').addClass('btn-danger');
@@ -68,6 +72,22 @@ angular.module('myApp.controllers', [])
         $('.ng-pristine').removeClass('ng-pristine').addClass('ng-dirty');
       }
     };
+    
+    function addEventToLog() {
+      // push array object to log
+      eventLogService.push($scope.event);
+      // get the id (array position) of log
+      // set this as logId for event
+      $scope.event.logId = eventLogService.get().length-1;
+      
+      // we have the hardDrive and the event, give to harddrive!
+      $scope.hardDrive.event = $scope.event;
+      // firebaseService.$child($scope.hardDrive.arrayPosition).$update({event: $scope.event});
+      
+      // clear out the modal form and dismiss
+      $scope.clearForm();
+      $('#add-event-modal').modal('hide');
+    }
     
     $scope.$watch('addEventForm.$valid', function(valid) {           
         //$scope.valid = newVal;
