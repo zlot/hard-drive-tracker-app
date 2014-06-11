@@ -8,6 +8,7 @@
 angular.module('myApp.services', [])
   .value('version', '0.1')
   .value('author', 'Mark C Mitchell')
+  
   .factory('eventService', function() {
     // containers for the real json objects to be passed through.
     var hardDrive = {};
@@ -20,10 +21,20 @@ angular.module('myApp.services', [])
       }
     };
   })
+  
   .factory("FirebaseService", ["$firebase", function($firebase) {
-    var firebaseRef = new Firebase("MY FIREBASE.firebaseio.com/hardDrives");
-    return $firebase(firebaseRef);
+     var firebaseRefForHardDrives = new Firebase("MY FIREBASE.com/hardDrives");
+     var firebaseRefForEventlog = new Firebase("MY FIREBASE.com/eventLog");
+     return {
+       getHardDrives: function() {
+        return $firebase(firebaseRefForHardDrives);
+       },
+       getEventLog: function() {
+         return $firebase(firebaseRefForEventlog);
+       }
+     };
   }])
+  
   .factory("HardDrivesService", ["FirebaseService", function(firebaseService) {
   // hardDrives listing
     var hardDrives = [
@@ -67,15 +78,16 @@ angular.module('myApp.services', [])
         return hardDrives;
       },
       setToFirebase: function() {
-        firebaseService.$set(hardDrives);
+        firebaseService.getHardDrives().$set(hardDrives);
       }
     };
   }])
+  
   .factory("EventLogService", ["FirebaseService", function(firebaseService) {
     // hardDrives listing
     var eventLog = [
       {
-        hardDrive: {},
+        hardDriveName: {},
         location: "location",
         date: Date.now(),
         note: "this is a note of the event",
@@ -90,14 +102,14 @@ angular.module('myApp.services', [])
       push: function(event) {
         eventLog.push(event);
       },
-      addHardDriveToLog: function(logId, hardDrive) {
-        eventLog[logId].hardDrive = hardDrive;
+      addHardDriveToLog: function(logId, hardDriveName) {
+        eventLog[logId].hardDriveName = hardDriveName;
       },
       updateReturnedDate: function(logId, returnedDate) {
         eventLog[logId].returnedDate = returnedDate;
       },
       setToFirebase: function() {
-        firebaseService.$set(eventLog);
+        firebaseService.getEventLog().$set(eventLog);
       }
     };
   }])

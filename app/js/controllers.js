@@ -13,9 +13,9 @@ angular.module('myApp.controllers', [])
     // either bind model to local hardDrives for testing:
     // $scope.hardDrives = hardDrivesService.get();
     // or bind to firebaseService.
-    $scope.hardDrives = firebaseService;
+    $scope.hardDrives = firebaseService.getHardDrives();
     // override and set local hardDrives json to firebase:
-    // hardDrivesService.setToFirebase();
+    hardDrivesService.setToFirebase();
     
     $scope.bringUpForm = function(hardDrive) {
       // create a modal popup
@@ -23,7 +23,9 @@ angular.module('myApp.controllers', [])
       
       // give selected hardDrive to eventService, ready for a form submission
       eventService.setHardDrive(hardDrive);
-      $scope.$broadcast('modalActivated');
+      // NOT ACTUALLY WORKING:: because it only broadcasts within scope?
+      // and the .$on is inside ModalCtrl, outside of scope?
+      // $scope.$broadcast('modalActivated');
     };
     
     $scope.removeEvent = function(hardDrive) {
@@ -33,19 +35,19 @@ angular.module('myApp.controllers', [])
       // find log date
       eventLogService.updateReturnedDate(hardDrive.event.logId, Date.now());
       
-      // firebaseService.$child(hardDrive.arrayPosition).$remove("event");
+      firebaseService.getHardDrives().$child(hardDrive.arrayPosition).$remove("event");
       
-      
+      //%%%%% UNNECESSARY ONCE FIREBASE IS IN USE?
       hardDrive.event = [];
     };
     
   }])
-  .controller('EventLogCtrl', ['$scope', 'eventService', 'EventLogService', 'HardDrivesService', function($scope, eventService, eventLogService, hardDrivesService) {
+  .controller('EventLogCtrl', ['$scope', 'eventService', 'EventLogService', 'FirebaseService', 'HardDrivesService', function($scope, eventService, eventLogService, firebaseService, hardDrivesService) {
     
     // either bind model to local eventLog for testing:
-    $scope.eventLog = eventLogService.get();
+    // $scope.eventLog = eventLogService.get();
     // or bind to firebaseService.
-    //%%%%% $scope.eventLog = firebaseService;
+    $scope.eventLog = firebaseService.getEventLog();
     // override and set local eventLogService json to firebase:
     // eventLogService.setToFirebase();
     
@@ -64,19 +66,19 @@ angular.module('myApp.controllers', [])
     
     // when modal is activated, get hard drive that was selected.
     // the hard drive is passed from bringUpForm to here, via the eventService.
-    $scope.$on('modalActivated', function(response) {
-      $scope.hardDrive = eventService.getHardDrive();
-    });
+    // NOTE:: NOT WORKING, $broadcast or $emit only works if this $on is within
+    // the current scope of where $broadcast/$emit is called?
+    // $scope.$on('modalActivated', function(response) {
+      // $scope.hardDrive = eventService.getHardDrive();
+      // alert("$scope.hardDrive");
+    // });
     
     
     $scope.validateForm = function(addEventForm) {
       submitPressedOnce = true;
       
       if(addEventForm.$valid) {
-        $scope.event.date = $scope.date;
-        
         addEventToLog();
-        
       } else {
         // not valid, don't submit
         $('#submit').removeClass('btn-primary').addClass('btn-danger');
@@ -86,18 +88,22 @@ angular.module('myApp.controllers', [])
     };
     
     function addEventToLog() {
+      $scope.hardDrive = eventService.getHardDrive();
+      
+      // $scope.event.location, $scope.event.notes are defined by user input in form.
+      $scope.event.date = $scope.date;
+      
       // push array object to log
       eventLogService.push($scope.event);
       // get the id (array position) of log
       // set this as logId for event
       $scope.event.logId = eventLogService.get().length-1;
       // add harddrive to the event log
-      eventLogService.addHardDriveToLog($scope.event.logId, $scope.hardDrive);
+       eventLogService.addHardDriveToLog($scope.event.logId, $scope.hardDrive.name);
       
-      $scope.hardDrive = eventService.getHardDrive();
       // we have the hardDrive and the event, give to harddrive!
       $scope.hardDrive.event = $scope.event;
-      // firebaseService.$child($scope.hardDrive.arrayPosition).$update({event: $scope.event});
+      firebaseService.getHardDrives().$child($scope.hardDrive.arrayPosition).$update({event: $scope.event});
       
       // clear out the modal form and dismiss
       $scope.clearForm();
