@@ -16,22 +16,19 @@
     <th>Hard Drive Name</th>
     <th>Event</th>
     <th>Date Sent</th>
-    <th>Note</th>
     <th>Returned Date</th>
+    <th>Note</th>
   </tr>
-  <tr ng-repeat="event in eventLog">
+  <tr ng-repeat="event in eventLog | orderByPriority">
     <td id="hard-drive-name">
-      {{event.hardDrive.name}}
-      <!-- {{eventLoghardDrive.name}}<br> -->
-      <!-- <small>{{hardDrive.size}}</small><br> -->
-      <!-- <small>{{hardDrive.notes}}</small> -->
+      {{event.hardDriveName}}
     </td>
     <td>
       {{event.location}}
     </td>
     <td>{{event.date | date : 'mediumDate'}}</td>
-    <td>{{event.note}}</td>
     <td>{{event.returnedDate | date : 'mediumDate'}}</td>
+    <td>{{event.notes}}</td>
   </tr>
 </table>  
 

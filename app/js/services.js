@@ -25,12 +25,15 @@ angular.module('myApp.services', [])
   .factory("FirebaseService", ["$firebase", function($firebase) {
      var firebaseRefForHardDrives = new Firebase("MY FIREBASE.com/hardDrives");
      var firebaseRefForEventlog = new Firebase("MY FIREBASE.com/eventLog");
+     var firebaseHardDrives = $firebase(firebaseRefForHardDrives);
+     var firebaseEventLog = $firebase(firebaseRefForEventlog);
+     
      return {
        getHardDrives: function() {
-        return $firebase(firebaseRefForHardDrives);
+        return firebaseHardDrives;
        },
        getEventLog: function() {
-         return $firebase(firebaseRefForEventlog);
+         return firebaseEventLog;
        }
      };
   }])
@@ -39,43 +42,34 @@ angular.module('myApp.services', [])
   // hardDrives listing
     var hardDrives = [
       {
-        name: "Hard Drive 1",
+        name: "010",
         arrayPosition: "0",
-        size: "500GB",
-        notes: "This is a test note.",
+        size: "? GB",
+        notes: "hard drive note.",
         event: {
-          location: "this is a location",
-          date: Date.now(),
-          notes: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean pellentesque, libero ut vulputate hendrerit, dolor massa sagittis nibh, non dignissim leo nisi id urna. Quisque lorem nunc, vehicula nec felis eu, sagittis pellentesque velit. Donec consequat eget augue sit amet luctus."
+          location: "",
+          date: "",
+          notes: "",
+          firebaseId: "used to send date back to event log when HD is returned."
         }
       },
       {
-        name: "Hard Drive 2",
+        name: "011",
         arrayPosition: "1",
-        size: "1TB",
-        notes: "This is a test note.",
+        size: "? GB",
+        notes: "hard drive note.",
         event: {
-          location: "this is a location",
-          date: Date.now(),
-          notes: "Aliquam faucibus luctus elit, congue pharetra justo faucibus feugiat. Morbi placerat quam non nisl luctus, ac dictum est laoreet. Aenean eget cursus nulla. Ut ante tortor, vehicula vel dictum ultrices, euismod a justo. Donec ac ultrices massa. Etiam sed lobortis est. Cras sit amet sagittis lacus. Quisque vitae sem lacus. Vestibulum dictum, felis et aliquam accumsan, ipsum tortor auctor augue, sit amet aliquet tortor elit posuere lacus. Aenean pellentesque, libero ut vulputate hendrerit, dolor massa sagittis nibh, non dignissim leo nisi id urna. Quisque lorem nunc, vehicula nec felis eu, sagittis pellentesque velit. Donec consequat eget augue sit amet luctus."
-        }
-      },
-      {
-        name: "Hard Drive 3",
-        arrayPosition: "2",
-        size: "2TB",
-        notes: "This is a test note.",
-        event: {
-          location: "this is a location",
-          date: Date.now(),
-          notes: "Lorem ipsum dolor sit amet, consectetur add., non dignissim leo nisi id urna. Quisque lorem nunc, vehicula nec felis eu, sagittis pellentesque velit. Donec consequat eget augue sit amet luctus."
+          location: "",
+          date: "",
+          notes: "",
+          firebaseId: "used to send date back to event log when HD is returned."
         }
       }
     ];
     
     return {
       get: function() {
-        return hardDrives;
+        return firebaseService.getHardDrives();
       },
       setToFirebase: function() {
         firebaseService.getHardDrives().$set(hardDrives);
@@ -84,31 +78,33 @@ angular.module('myApp.services', [])
   }])
   
   .factory("EventLogService", ["FirebaseService", function(firebaseService) {
-    // hardDrives listing
     var eventLog = [
       {
-        hardDriveName: {},
-        location: "location",
+        hardDriveName: 'hard drive name goes here',
+        location: "initial test location",
         date: Date.now(),
-        note: "this is a note of the event",
+        note: "this is a note of the event!",
         returnedDate: Date.now()
       }
     ];
     
     return {
       get: function() {
-        return eventLog;
+        return firebaseService.getEventLog();
       },
-      push: function(event) {
-        eventLog.push(event);
+      addToFirebase: function(event, selectedHardDriveInFirebase) {
+        // will be given an $id which can be grabbed from an iteration
+        // of events in the EventLog.
+        firebaseService.getEventLog().$add(event).then(function(ref) {
+          // let promise save event.$id to hardDrive
+          selectedHardDriveInFirebase.$child('event').$update({firebaseId: ref.name()});
+        });
       },
-      addHardDriveToLog: function(logId, hardDriveName) {
-        eventLog[logId].hardDriveName = hardDriveName;
-      },
-      updateReturnedDate: function(logId, returnedDate) {
-        eventLog[logId].returnedDate = returnedDate;
+      updateReturnedDateInFirebase: function(firebaseId, returnedDate) {
+        firebaseService.getEventLog().$child(firebaseId).$update({'returnedDate':returnedDate});
       },
       setToFirebase: function() {
+        // WIPES OUT EVENT LOG! ONLY FOR DEBUGGING!
         firebaseService.getEventLog().$set(eventLog);
       }
     };
