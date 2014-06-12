@@ -23,9 +23,10 @@ npm start
 
 Todo
 ----
+*  Add authentication so not anyone can just start editing our firebase
 *  Firebase is unnecessary: instead, should switch to a local database, perhaps sqlite or something. Or jsut even a flat json.txt file that I read in/out?!
-*  Name the hard drives
 *  Give an image to the hard drives also?
 *  Ability to edit the names of the hard drives / edit hard drive notes
 *  Ability to edit an event, after it's been created
-*  Log each time a hard drive is sent away / returned
+*  ~~Name the hard drives~~
+*  ~~Log each time a hard drive is sent away / returned~~
