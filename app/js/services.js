@@ -9,8 +9,8 @@ angular.module('myApp.services', [])
   .value('version', '0.1')
   .value('author', 'Mark C Mitchell')
   
-  .factory('eventService', function() {
-    // containers for the real json objects to be passed through.
+  .factory('HardDrivePassingService', function() {
+    /* used to pass selected Hard Drive from TableCtrl to ModalCtrl. */
     var hardDrive = {};
     return {
       setHardDrive: function(_hardDrive) {

@@ -3,7 +3,7 @@
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-  .controller('TableCtrl', ['$scope', 'eventService', 'EventLogService', 'FirebaseService', 'HardDrivesService', function($scope, eventService, eventLogService, firebaseService, hardDrivesService) {
+  .controller('TableCtrl', ['$scope', 'HardDrivePassingService', 'EventLogService', 'FirebaseService', 'HardDrivesService', function($scope, hardDrivePassingService, eventLogService, firebaseService, hardDrivesService) {
     $('#date').datepicker({
           format: "yyyy-mm-dd",
           weekStart: 1,
@@ -31,8 +31,8 @@ angular.module('myApp.controllers', [])
     
     $scope.bringUpForm = function(hardDrive) {
       $('#add-event-modal').modal(); // create modal popup
-      // give selected hardDrive to eventService, ready for a form submission
-      eventService.setHardDrive(hardDrive);
+      // give selected hardDrive to HardDrivePassingService, ready for a form submission
+      hardDrivePassingService.setHardDrive(hardDrive);
     };
     
     $scope.removeEvent = function(hardDrive) {
@@ -44,7 +44,7 @@ angular.module('myApp.controllers', [])
     };
     
   }])
-  .controller('EventLogCtrl', ['$scope', 'eventService', 'EventLogService', 'FirebaseService', 'HardDrivesService', function($scope, eventService, eventLogService, firebaseService, hardDrivesService) {
+  .controller('EventLogCtrl', ['$scope', 'FirebaseService', function($scope, firebaseService) {
     // bind $scope to firebaseService.
     $scope.eventLog = firebaseService.getEventLog();
     
@@ -53,7 +53,7 @@ angular.module('myApp.controllers', [])
     $('nav #event-log-pill').addClass('active');    
   }])
   
-  .controller('ModalCtrl',['$scope', 'eventService', 'EventLogService', 'FirebaseService', function($scope, eventService, eventLogService, firebaseService) {
+  .controller('ModalCtrl',['$scope', 'HardDrivePassingService', 'EventLogService', 'FirebaseService', function($scope, hardDrivePassingService, eventLogService, firebaseService) {
     
     var submitPressedOnce = false;
     
@@ -77,7 +77,7 @@ angular.module('myApp.controllers', [])
     };
     
     function addEventToLog() {
-      $scope.hardDrive = eventService.getHardDrive();
+      $scope.hardDrive = hardDrivePassingService.getHardDrive();
       
       var selectedHardDriveInFirebase = firebaseService.getHardDrives().$child($scope.hardDrive.arrayPosition);
       

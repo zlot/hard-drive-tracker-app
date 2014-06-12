@@ -2,7 +2,6 @@
 
 /* Directives */
 
-
 angular.module('myApp.directives', []).
   directive('appVersion', ['version', function(version) {
     // Directives that want to modify the DOM typically use the link option
@@ -47,9 +46,6 @@ angular.module('myApp.directives', []).
           JSON.stringify(eventLogService.get(), null, '\t'));
         };
         
-        // todo:: can I place ModalCtrl or TableCtrl dependency for this directive;
-        //   then use a $scope.$watch on a button press?
-        // start the UI update process; save the timeoutId for canceling
         $interval(function() {
           updateDisplay(); // update DOM
         }, 1000);        
