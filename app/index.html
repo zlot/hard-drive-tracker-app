@@ -24,11 +24,17 @@
     Every time the current route changes, the included view changes with it according 
     to the configuration of the $route service. -->
 
-  <div class="container">    
+  <div class="container">
+    
+    
     <div><img src="img/tmc_logo.png"/></div>
-    <a href="#/">Hard Drives</a> | 
-    <a href="#/log">Log</a>
-  
+    <nav>
+      <ul class="nav nav-pills" style="margin-bottom:1em">
+        <li id="hard-drives-pill"><a href="#/">Hard Drives</a></li>
+        <li id="event-log-pill"><a href="#/log">Event Log</a></li>
+      </ul>
+    </nav>
+    
     <div ng-view class="panel panel-primary"></div>
     
     <add-event-modal></add-event-modal>

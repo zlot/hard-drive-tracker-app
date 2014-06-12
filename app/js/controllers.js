@@ -10,10 +10,24 @@ angular.module('myApp.controllers', [])
           todayBtn: "linked",
           todayHighlight: true
       });
+    
+    // cheap way of setting active class on navigation
+    $('nav #event-log-pill').removeClass('active');
+    $('nav #hard-drives-pill').addClass('active');
+      
     // bind to firebaseService.
     $scope.hardDrives = firebaseService.getHardDrives();
     // override and set local hardDrives json to firebase:
     // hardDrivesService.setToFirebase();
+    
+    /* used to deal with active class on bootstrap nav-pills. See http://stackoverflow.com/questions/12592472/how-to-highlight-a-current-menu-item-in-angularjs/23138152#23138152 */
+    $scope.getClass = function(path) {
+        if ($location.path().substr(0, path.length) == path) {
+          return "active";
+        } else {
+          return "";
+        };
+    };
     
     $scope.bringUpForm = function(hardDrive) {
       $('#add-event-modal').modal(); // create modal popup
@@ -33,6 +47,10 @@ angular.module('myApp.controllers', [])
   .controller('EventLogCtrl', ['$scope', 'eventService', 'EventLogService', 'FirebaseService', 'HardDrivesService', function($scope, eventService, eventLogService, firebaseService, hardDrivesService) {
     // bind $scope to firebaseService.
     $scope.eventLog = firebaseService.getEventLog();
+    
+    // cheap way of setting active class on navigation
+    $('nav #hard-drives-pill').removeClass('active');
+    $('nav #event-log-pill').addClass('active');    
   }])
   
   .controller('ModalCtrl',['$scope', 'eventService', 'EventLogService', 'FirebaseService', function($scope, eventService, eventLogService, firebaseService) {
