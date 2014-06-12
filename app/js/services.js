@@ -8,7 +8,7 @@
 angular.module('myApp.services', [])
   .value('version', '0.1')
   .value('author', 'Mark C Mitchell')
-  
+  .value('firebaseUniqueStr', 'REPLACE_ME_WITH_YOUR_FIREBASE_REFERENCE')
   .factory('HardDrivePassingService', function() {
     /* used to pass selected Hard Drive from TableCtrl to ModalCtrl. */
     var hardDrive = {};
@@ -22,9 +22,9 @@ angular.module('myApp.services', [])
     };
   })
   
-  .factory("FirebaseService", ["$firebase", function($firebase) {
-     var firebaseRefForHardDrives = new Firebase("MY FIREBASE.com/hardDrives");
-     var firebaseRefForEventlog = new Firebase("MY FIREBASE.com/eventLog");
+  .factory("FirebaseService", ["$firebase", "firebaseUniqueStr", function($firebase, firebaseUniqueStr) {
+     var firebaseRefForHardDrives = new Firebase("http://" + firebaseUniqueStr + ".firebaseio.com/hardDrives");
+     var firebaseRefForEventlog = new Firebase("http://" + firebaseUniqueStr + ".firebaseio.com/eventLog");
      var firebaseHardDrives = $firebase(firebaseRefForHardDrives);
      var firebaseEventLog = $firebase(firebaseRefForEventlog);
      
