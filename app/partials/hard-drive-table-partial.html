@@ -1,6 +1,5 @@
 <div class="panel panel-heading">Hard Drives (app v<span app-version></span>)</div>
  <!-- <div class="panel-body">
-
 </div> -->
 
 <table id="hard-drive-table" class="table table-striped table-hover">
@@ -22,7 +21,7 @@
       <button ng-show="hardDrive.event.location" type="button" class="i-have-returned btn btn-success" ng-click="removeEvent(hardDrive)">I have returned</button>
     </td>
     <td id="hard-drive-name">
-      {{hardDrive.name}}<br>
+      <span class="h4">{{hardDrive.name}}</span><br>
       <small>{{hardDrive.size}}</small><br>
       <small>{{hardDrive.notes}}</small>
       
