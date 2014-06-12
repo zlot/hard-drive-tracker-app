@@ -19,6 +19,12 @@ angular.module('myApp.directives', []).
       templateUrl: 'partials/add-form-modal-partial.html'
     };
   })
+  .directive('returnedEventModal',function() {
+    return {
+      restrict: 'E',
+      templateUrl: 'partials/returned-form-modal-partial.html'
+    };
+  })
   .directive('debugHardDrives', ['HardDrivesService', '$interval', function(hardDrivesService, $interval) {
     // updates what the hardDrives local object looks like every 1000ms
     return {

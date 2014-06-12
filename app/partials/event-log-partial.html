@@ -5,23 +5,25 @@
 
 <table id="hard-drive-table" class="table table-striped table-hover">
  <colgroup>
-    <col style="width:12%">
+    <col style="width:9%">
     <col style="width:15%">
     <col style="width:15%">
     <col style="width:15%">
-    <col style="width:43%">
+    <col style="width:23%">
+    <col style="width:23%">
   </colgroup>
 
   <tr>
-    <th>Hard Drive Name</th>
+    <th>Hard Drive</th>
     <th>Event</th>
     <th>Date Sent</th>
-    <th>Returned Date</th>
-    <th>Note</th>
+    <th>Date Returned</th>
+    <th>Note when sent</th>
+    <th>Note when returned</th>
   </tr>
   <tr ng-hide="loadedBool">
     <td style="background-color: #fff"></td>
-    <td style="background-color: #fff" colspan="4"><img src="img/Preloader_4.gif"/></td>
+    <td style="background-color: #fff" colspan="5"><img src="img/Preloader_4.gif"/></td>
   </tr>
   <tr ng-repeat="event in eventLog | orderByPriority">
     <td id="hard-drive-name">
@@ -33,6 +35,7 @@
     <td>{{event.date | date : 'mediumDate'}}</td>
     <td>{{event.returnedDate | date : 'mediumDate'}}</td>
     <td>{{event.notes}}</td>
+    <td>{{event.returnedNote}}</td>
   </tr>
 </table>  
 

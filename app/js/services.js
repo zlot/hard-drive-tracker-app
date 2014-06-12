@@ -103,6 +103,9 @@ angular.module('myApp.services', [])
       updateReturnedDateInFirebase: function(firebaseId, returnedDate) {
         firebaseService.getEventLog().$child(firebaseId).$update({'returnedDate':returnedDate});
       },
+      addReturnedNote: function(firebaseId, returnedNote) {
+        firebaseService.getEventLog().$child(firebaseId).$update({'returnedNote':returnedNote});
+      },
       setToFirebase: function() {
         // WIPES OUT EVENT LOG! ONLY FOR DEBUGGING!
         firebaseService.getEventLog().$set(eventLog);

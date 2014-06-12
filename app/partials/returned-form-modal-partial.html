@@ -1,0 +1,40 @@
+
+<!-- Modal -->
+<div class="modal fade" id="returned-event-modal" ng-controller="ReturnedFormCtrl" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">I have returned from {{location}}</h4>
+      </div>
+      
+      <div class="modal-body">
+        <form id="returned-form" name="returnedForm" role="form" ng-submit="validateForm(returnedForm)" novalidate>
+          <div class="modal-body">
+            <fieldset>
+             <legend>Hard Drive: {{hardDriveName}}</legend>
+                <div class="form-group">
+                  <label for="date">Date</label>
+                    <div class="input-group date">
+                      <input ng-model="date" type="date" class="form-control" id="return-date" required>
+                      <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    </div>
+                </div>
+    
+                <div class="form-group">
+                  <label for="event-notes">Notes (eg courier returned?)</label>
+                  <textarea required ng-model="event.notes" id="returned-event-notes" class="form-control" rows="3" required></textarea>
+                </div>          
+             </fieldset>
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clearForm()">Close</button>
+            <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+            <!-- <h5>Hard Drive: {{hardDrive}}</h5> -->
+            <!-- <h5>the form is {{addEventForm.$valid}}</h5> -->
+          </div>
+        </form>
+    </div>
+  </div>
+</div>

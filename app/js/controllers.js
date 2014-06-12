@@ -10,6 +10,12 @@ angular.module('myApp.controllers', [])
           todayBtn: "linked",
           todayHighlight: true
       });
+    $('#return-date').datepicker({
+          format: "yyyy-mm-dd",
+          weekStart: 1,
+          todayBtn: "linked",
+          todayHighlight: true
+      });  
     
     // cheap way of setting active class on navigation
     $('nav #event-log-pill').removeClass('active');
@@ -38,11 +44,15 @@ angular.module('myApp.controllers', [])
     };
     
     $scope.removeEvent = function(hardDrive) {
+      // give selected hardDrive to HardDrivePassingService, ready for a form submission
+      hardDrivePassingService.setHardDrive(hardDrive);
+      
+      $('#returned-event-modal').modal(); // create modal popup
       // when hard drive has returned, update log event to define date
       // for now, it will use date when clicked.
       // ideally, should use date picker again to choose a date.
-      eventLogService.updateReturnedDateInFirebase(hardDrive.event.firebaseId, Date.now());
-      firebaseService.getHardDrives().$child(hardDrive.arrayPosition).$remove("event");
+      // eventLogService.updateReturnedDateInFirebase(hardDrive.event.firebaseId, Date.now());
+      // firebaseService.getHardDrives().$child(hardDrive.arrayPosition).$remove("event");
     };
     
   }])
@@ -116,4 +126,62 @@ angular.module('myApp.controllers', [])
       $('#date').datepicker('update', new Date());
       $scope.addEventForm.$setPristine();
     };
-  }]);
+  }])
+  
+  .controller('ReturnedFormCtrl',['$scope', 'HardDrivePassingService', 'EventLogService', 'FirebaseService', function($scope, hardDrivePassingService, eventLogService, firebaseService) {
+    
+    var submitPressedOnce = false;
+    
+    $scope.date = new Date();
+    
+    $('#returned-event-modal').on('show.bs.modal', function(e) {
+      $scope.hardDriveName = hardDrivePassingService.getHardDrive().name;
+      $scope.location = hardDrivePassingService.getHardDrive().event.location;
+      // Empty event object to submit as event when form is filled in.
+      // Note that this is ng-model bounded to the form!
+      $scope.event = {};
+    });
+    
+    $scope.validateForm = function(returnedForm) {
+      submitPressedOnce = true;
+      
+      if(returnedForm.$valid) {
+         updateEventInLog();
+      } else {
+        // not valid, don't submit
+        $('#submit').removeClass('btn-primary').addClass('btn-danger');
+        // turn invalid fields dirty to get colorizing
+        $('.ng-pristine').removeClass('ng-pristine').addClass('ng-dirty');
+      }
+    };
+    
+    function updateEventInLog() {
+      $scope.hardDrive = hardDrivePassingService.getHardDrive();
+      
+      var selectedHardDriveInFirebase = firebaseService.getHardDrives().$child($scope.hardDrive.arrayPosition);
+      
+      eventLogService.updateReturnedDateInFirebase($scope.hardDrive.event.firebaseId, $scope.date);
+      eventLogService.addReturnedNote($scope.hardDrive.event.firebaseId, $scope.event.notes);
+      firebaseService.getHardDrives().$child($scope.hardDrive.arrayPosition).$remove("event");
+      
+      // clear out the modal form and dismiss
+      $scope.clearForm();
+      $('#returned-event-modal').modal('hide');
+    }
+    
+    $scope.$watch('addEventForm.$valid', function(valid) {           
+        if(valid) {
+          $('#submit').removeClass('btn-danger').addClass('btn-success');
+        } else {
+          $('#submit').removeClass('btn-success').addClass('btn-danger');
+        }
+    });
+    
+    $scope.clearForm = function() {
+      // reset form
+      this.event = {};
+      $('#return-date').datepicker('update', new Date());
+      $scope.returnedForm.$setPristine();
+    };
+  }])
+  ;
