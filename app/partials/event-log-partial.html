@@ -19,6 +19,10 @@
     <th>Returned Date</th>
     <th>Note</th>
   </tr>
+  <tr ng-hide="loadedBool">
+    <td style="background-color: #fff"></td>
+    <td style="background-color: #fff" colspan="4"><img src="img/Preloader_4.gif"/></td>
+  </tr>
   <tr ng-repeat="event in eventLog | orderByPriority">
     <td id="hard-drive-name">
       {{event.hardDriveName}}

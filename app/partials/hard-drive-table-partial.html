@@ -10,11 +10,14 @@
     <col style="width:15%">
     <col style="width:43%">
   </colgroup>
-
   <tr>
     <th></th>
     <th>Hard Drive Name</th>
     <th colspan="4">Event</th>
+  </tr>
+  <tr ng-hide="loadedBool">
+    <td style="background-color: #fff"></td>
+    <td style="background-color: #fff" colspan="4"><img src="img/Preloader_4.gif"/></td>
   </tr>
   <tr ng-repeat="hardDrive in hardDrives">
     <td>

@@ -17,8 +17,10 @@ angular.module('myApp.controllers', [])
       
     // bind to firebaseService.
     $scope.hardDrives = firebaseService.getHardDrives();
-    // override and set local hardDrives json to firebase:
-    // hardDrivesService.setToFirebase();
+    // show preloader until data is loaded.
+    $scope.hardDrives.$on("loaded", function() {
+      $scope.loadedBool = true;
+    });
     
     /* used to deal with active class on bootstrap nav-pills. See http://stackoverflow.com/questions/12592472/how-to-highlight-a-current-menu-item-in-angularjs/23138152#23138152 */
     $scope.getClass = function(path) {
@@ -47,7 +49,10 @@ angular.module('myApp.controllers', [])
   .controller('EventLogCtrl', ['$scope', 'FirebaseService', function($scope, firebaseService) {
     // bind $scope to firebaseService.
     $scope.eventLog = firebaseService.getEventLog();
-    
+    // show preloader until data is loaded.
+    $scope.eventLog.$on("loaded", function() {
+      $scope.loadedBool = true;
+    });
     // cheap way of setting active class on navigation
     $('nav #hard-drives-pill').removeClass('active');
     $('nav #event-log-pill').addClass('active');    
