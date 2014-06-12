@@ -15,6 +15,8 @@ This will also call `bower install` to install app dependencies. To add more dep
 
 **note:** Make sure to use `angular#1.3.x`, not the stable version `1.2.x`. Only `1.3.x` allows `input=date` form validation.
 
+Then, replace `"MY FIREBASE.firebaseio.com/hardDrives"` in `services.js` to the correct `firebase.io` reference.
+
 To run the application on a local server with the `npm` package `http-server`:
 ```
 npm start
