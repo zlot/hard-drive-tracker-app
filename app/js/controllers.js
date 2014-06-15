@@ -3,7 +3,7 @@
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-  .controller('TableCtrl', ['$scope', 'HardDrivePassingService', 'EventLogService', 'FirebaseService', 'HardDrivesService', function($scope, hardDrivePassingService, eventLogService, firebaseService, hardDrivesService) {
+  .controller('TableCtrl', ['$scope', 'HardDrivePassingService', 'api', function($scope, hardDrivePassingService, api) {
     $('#date').datepicker({
           format: "yyyy-mm-dd",
           weekStart: 1,
@@ -21,13 +21,38 @@ angular.module('myApp.controllers', [])
     $('nav #event-log-pill').removeClass('active');
     $('nav #hard-drives-pill').addClass('active');
       
-    // bind to firebaseService.
-    $scope.hardDrives = firebaseService.getHardDrives();
-    // show preloader until data is loaded.
-    $scope.hardDrives.$on("loaded", function() {
-      $scope.loadedBool = true;
-    });
+    // bind $scope to JSON returned from REST API.
+    // API returns a promise which we must return asynchronously using then().
+    function bindScope() {
+      api.getHardDrives().then(function(resp) {
+        $scope.loadedBool = true;
+        $scope.hardDrives = resp.data;
+        // for each harddrive:
+        for(var i=0;i<$scope.hardDrives.length;i++) {
+          /* to get i inside the promise, we must capture i in a closure!
+           * See http://stackoverflow.com/questions/17244614/promise-in-a-loop
+           * or: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures,
+           * the part that says Creating closures in loops: A common mistake
+           */
+          (function(i) {
+            if($scope.hardDrives[i].current_eventid !== null) { 
+              api.getEvent($scope.hardDrives[i].current_eventid).then(function(resp) {
+                $scope.hardDrives[i].location = resp.data.location;
+                $scope.hardDrives[i].date = resp.data.date;
+                $scope.hardDrives[i].eventnote = resp.data.note;
+              });
+            }
+          })(i);
+        }
+      });
+    }
+    bindScope();
     
+    $scope.$on('modelUpdated', function(e) {
+      bindScope();  
+    });
+
+    // show preloader until data is loaded.
     /* used to deal with active class on bootstrap nav-pills. See http://stackoverflow.com/questions/12592472/how-to-highlight-a-current-menu-item-in-angularjs/23138152#23138152 */
     $scope.getClass = function(path) {
         if ($location.path().substr(0, path.length) == path) {
@@ -41,6 +66,8 @@ angular.module('myApp.controllers', [])
       $('#add-event-modal').modal(); // create modal popup
       // give selected hardDrive to HardDrivePassingService, ready for a form submission
       hardDrivePassingService.setHardDrive(hardDrive);
+      // must use $root to broadcast.
+      $scope.$root.$broadcast('modalPopup');
     };
     
     $scope.removeEvent = function(hardDrive) {
@@ -48,35 +75,33 @@ angular.module('myApp.controllers', [])
       hardDrivePassingService.setHardDrive(hardDrive);
       
       $('#returned-event-modal').modal(); // create modal popup
-      // when hard drive has returned, update log event to define date
-      // for now, it will use date when clicked.
-      // ideally, should use date picker again to choose a date.
-      // eventLogService.updateReturnedDateInFirebase(hardDrive.event.firebaseId, Date.now());
-      // firebaseService.getHardDrives().$child(hardDrive.arrayPosition).$remove("event");
     };
     
   }])
-  .controller('EventLogCtrl', ['$scope', 'FirebaseService', function($scope, firebaseService) {
-    // bind $scope to firebaseService.
-    $scope.eventLog = firebaseService.getEventLog();
-    // show preloader until data is loaded.
-    $scope.eventLog.$on("loaded", function() {
+  .controller('EventLogCtrl', ['$scope', 'api', function($scope, api) {
+    
+    // bind $scope to JSON returned from REST API.
+    // API returns a promise which we must return asynchronously using then().
+    api.getEvents().then(function(resp) {
+      // show preloader until data is loaded.
       $scope.loadedBool = true;
+      $scope.eventLog = resp.data;
     });
+    
     // cheap way of setting active class on navigation
     $('nav #hard-drives-pill').removeClass('active');
     $('nav #event-log-pill').addClass('active');    
   }])
   
-  .controller('ModalCtrl',['$scope', 'HardDrivePassingService', 'EventLogService', 'FirebaseService', function($scope, hardDrivePassingService, eventLogService, firebaseService) {
-    
+  .controller('ModalCtrl',['$scope', 'HardDrivePassingService', 'api', function($scope, hardDrivePassingService, api) {
     var submitPressedOnce = false;
-    
+
+    // set the correct scope when modal is called
+    $scope.$on('modalPopup', function(event) {
+      $scope.hardDrive = hardDrivePassingService.getHardDrive();
+    });
+
     $scope.date = new Date();
-    
-    // Empty event object to submit as event when form is filled in.
-    // Note that this is ng-model bounded to the form!
-    $scope.event = {};
     
     $scope.validateForm = function(addEventForm) {
       submitPressedOnce = true;
@@ -92,24 +117,17 @@ angular.module('myApp.controllers', [])
     };
     
     function addEventToLog() {
-      $scope.hardDrive = hardDrivePassingService.getHardDrive();
-      
-      var selectedHardDriveInFirebase = firebaseService.getHardDrives().$child($scope.hardDrive.arrayPosition);
-      
-      // set hardDriveName for eventLog
-      $scope.event.hardDriveName = selectedHardDriveInFirebase.name;
-      // $scope.event.location, $scope.event.notes are defined by user input in form.
-      $scope.event.date = $scope.date;
-      
-      // push array object to log
-      eventLogService.addToFirebase($scope.event, selectedHardDriveInFirebase);
-      
-      // update the harddrive to state current event
-      selectedHardDriveInFirebase.$update({event: $scope.event});
-      
-      // clear out the modal form and dismiss
-      $scope.clearForm();
-      $('#add-event-modal').modal('hide');
+
+      api.createEvent({
+        'location' : $scope.event.location,
+        'date'     : $scope.date,
+        'note'     : $scope.event.note,
+        'harddrive_name' : $scope.hardDrive.name
+      }).then(function(resp) {
+        $scope.$root.$broadcast('modelUpdated');
+        $scope.clearForm();
+        $('#add-event-modal').modal('hide');
+      });
     }
     
     $scope.$watch('addEventForm.$valid', function(valid) {           
@@ -128,7 +146,7 @@ angular.module('myApp.controllers', [])
     };
   }])
   
-  .controller('ReturnedFormCtrl',['$scope', 'HardDrivePassingService', 'EventLogService', 'FirebaseService', function($scope, hardDrivePassingService, eventLogService, firebaseService) {
+  .controller('ReturnedFormCtrl',['$scope', 'HardDrivePassingService', 'api', function($scope, hardDrivePassingService, api) {
     
     var submitPressedOnce = false;
     
@@ -136,10 +154,7 @@ angular.module('myApp.controllers', [])
     
     $('#returned-event-modal').on('show.bs.modal', function(e) {
       $scope.hardDriveName = hardDrivePassingService.getHardDrive().name;
-      $scope.location = hardDrivePassingService.getHardDrive().event.location;
-      // Empty event object to submit as event when form is filled in.
-      // Note that this is ng-model bounded to the form!
-      $scope.event = {};
+      $scope.location = hardDrivePassingService.getHardDrive().location;
     });
     
     $scope.validateForm = function(returnedForm) {
@@ -158,11 +173,13 @@ angular.module('myApp.controllers', [])
     function updateEventInLog() {
       $scope.hardDrive = hardDrivePassingService.getHardDrive();
       
-      var selectedHardDriveInFirebase = firebaseService.getHardDrives().$child($scope.hardDrive.arrayPosition);
-      
-      eventLogService.updateReturnedDateInFirebase($scope.hardDrive.event.firebaseId, $scope.date);
-      eventLogService.addReturnedNote($scope.hardDrive.event.firebaseId, $scope.event.notes);
-      firebaseService.getHardDrives().$child($scope.hardDrive.arrayPosition).$remove("event");
+      // PUTS to api
+      api.updateEvent($scope.hardDrive.current_eventid, {
+        'returned_date' : $scope.date,
+        'returned_note' : $scope.note
+      }).then(function(resp) {
+        $scope.$root.$broadcast('modelUpdated');
+      });
       
       // clear out the modal form and dismiss
       $scope.clearForm();
@@ -179,7 +196,7 @@ angular.module('myApp.controllers', [])
     
     $scope.clearForm = function() {
       // reset form
-      this.event = {};
+      $scope.note = '';
       $('#return-date').datepicker('update', new Date());
       $scope.returnedForm.$setPristine();
     };

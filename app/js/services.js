@@ -8,7 +8,6 @@
 angular.module('myApp.services', [])
   .value('version', '0.2')
   .value('author', 'Mark C Mitchell')
-  .value('firebaseUniqueStr', 'REPLACE_ME_WITH_YOUR_FIREBASE_REFERENCE')
   .factory('HardDrivePassingService', function() {
     /* used to pass selected Hard Drive from TableCtrl to ModalCtrl. */
     var hardDrive = {};
@@ -22,96 +21,28 @@ angular.module('myApp.services', [])
     };
   })
   
-  .factory("FirebaseService", ["$firebase", "firebaseUniqueStr", function($firebase, firebaseUniqueStr) {
-     var firebaseRefForHardDrives = new Firebase("http://" + firebaseUniqueStr + ".firebaseio.com/hardDrives");
-     var firebaseRefForEventlog = new Firebase("http://" + firebaseUniqueStr + ".firebaseio.com/eventLog");
-     var firebaseHardDrives = $firebase(firebaseRefForHardDrives);
-     var firebaseEventLog = $firebase(firebaseRefForEventlog);
+  .factory("api", ["$http", function($http) {
+    var baseURI = 'http://localhost:4567/api/';
+    return {
+      getHardDrives: function() {
+        return $http.get(baseURI + 'harddrives');
+      },
+      getEvents: function() {
+        return $http.get(baseURI + 'events');
+      },
+      getEvent: function(eventid) {
+        return $http.get(baseURI + 'events/' + eventid);
+      },
+      createEvent: function(eventObject) {
+        return $http.post(baseURI + 'events', eventObject);
+      },
+      updateEvent: function(eventid, eventObject) {
+        return $http.put(baseURI + 'events/' + eventid, eventObject);
+      }
      
-     return {
-       getHardDrives: function() {
-        return firebaseHardDrives;
-       },
-       getEventLog: function() {
-         return firebaseEventLog;
-       }
-     };
-  }])
-  
-  .factory("HardDrivesService", ["FirebaseService", function(firebaseService) {
-  // hardDrives listing
-    var hardDrives = [
-      {
-        name: "010",
-        arrayPosition: "0",
-        size: "? GB",
-        notes: "hard drive note.",
-        event: {
-          location: "",
-          date: "",
-          notes: "",
-          firebaseId: "used to send date back to event log when HD is returned."
-        }
-      },
-      {
-        name: "011",
-        arrayPosition: "1",
-        size: "? GB",
-        notes: "hard drive note.",
-        event: {
-          location: "",
-          date: "",
-          notes: "",
-          firebaseId: "used to send date back to event log when HD is returned."
-        }
-      }
-    ];
-    
-    return {
-      get: function() {
-        return firebaseService.getHardDrives();
-      },
-      setToFirebase: function() {
-        firebaseService.getHardDrives().$set(hardDrives);
-      }
     };
   }])
   
-  .factory("EventLogService", ["FirebaseService", function(firebaseService) {
-    var eventLog = [
-      {
-        hardDriveName: 'hard drive name goes here',
-        location: "initial test location",
-        date: Date.now(),
-        note: "this is a note of the event!",
-        returnedDate: Date.now()
-      }
-    ];
-    
-    return {
-      get: function() {
-        return firebaseService.getEventLog();
-      },
-      addToFirebase: function(event, selectedHardDriveInFirebase) {
-        // will be given an $id which can be grabbed from an iteration
-        // of events in the EventLog.
-        firebaseService.getEventLog().$add(event).then(function(ref) {
-          // let promise save event.$id to hardDrive
-          selectedHardDriveInFirebase.$child('event').$update({firebaseId: ref.name()});
-        });
-      },
-      updateReturnedDateInFirebase: function(firebaseId, returnedDate) {
-        firebaseService.getEventLog().$child(firebaseId).$update({'returnedDate':returnedDate});
-      },
-      addReturnedNote: function(firebaseId, returnedNote) {
-        firebaseService.getEventLog().$child(firebaseId).$update({'returnedNote':returnedNote});
-      },
-      setToFirebase: function() {
-        // WIPES OUT EVENT LOG! ONLY FOR DEBUGGING!
-        firebaseService.getEventLog().$set(eventLog);
-      }
-    };
-  }])
   
   ;
 

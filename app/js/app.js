@@ -3,7 +3,6 @@
 
 // Declare app level module which depends on filters, and services
 angular.module('hardDriveApp', [
-  'firebase',
   'ngRoute',
   'ngAnimate',
   'myApp.filters',
@@ -11,7 +10,7 @@ angular.module('hardDriveApp', [
   'myApp.directives',
   'myApp.controllers'
 ]).
-config(['$routeProvider', function($routeProvider) {
+config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
   $routeProvider.when('/', {
       templateUrl: 'partials/hard-drive-table-partial.html', 
       controller: 'TableCtrl'
@@ -23,4 +22,7 @@ config(['$routeProvider', function($routeProvider) {
     }
   );
   $routeProvider.otherwise({redirectTo: '/'});
+  
+  //Enable cross domain calls
+  $httpProvider.defaults.useXDomain = true;
 }]);

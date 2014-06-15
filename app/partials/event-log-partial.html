@@ -25,17 +25,17 @@
     <td style="background-color: #fff"></td>
     <td style="background-color: #fff" colspan="5"><img src="img/Preloader_4.gif"/></td>
   </tr>
-  <tr ng-repeat="event in eventLog | orderByPriority">
+  <tr ng-repeat="event in eventLog">
     <td id="hard-drive-name">
-      {{event.hardDriveName}}
+      {{event.harddrive_name}}
     </td>
     <td>
       {{event.location}}
     </td>
     <td>{{event.date | date : 'mediumDate'}}</td>
-    <td>{{event.returnedDate | date : 'mediumDate'}}</td>
-    <td>{{event.notes}}</td>
-    <td>{{event.returnedNote}}</td>
+    <td>{{event.returned_date | date : 'mediumDate'}}</td>
+    <td>{{event.note}}</td>
+    <td>{{event.returned_note}}</td>
   </tr>
 </table>  
 

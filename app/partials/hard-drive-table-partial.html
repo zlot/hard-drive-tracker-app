@@ -21,20 +21,19 @@
   </tr>
   <tr ng-repeat="hardDrive in hardDrives">
     <td>
-      <button ng-show="hardDrive.event.location" type="button" class="i-have-returned btn btn-success" ng-click="removeEvent(hardDrive)">I have returned</button>
+      <button ng-show="hardDrive.location" type="button" class="i-have-returned btn btn-success" ng-click="removeEvent(hardDrive)">I have returned</button>
     </td>
     <td id="hard-drive-name">
       <span class="h4">{{hardDrive.name}}</span><br>
       <small>{{hardDrive.size}}</small><br>
-      <small>{{hardDrive.notes}}</small>
-      
+      <small>{{hardDrive.note}}</small>
     </td>
-    <td ng-hide="hardDrive.event.location" colspan="3">
+    <td ng-hide="hardDrive.location" colspan="3">
       <button type="button" class="btn btn-primary" ng-click="bringUpForm(hardDrive)">Send me out</button>
     </td>
-    <td id="hard-drive-event-location" ng-show="hardDrive.event.location">{{hardDrive.event.location}}</td>
-    <td id="hard-drive-event-date" ng-show="hardDrive.event.date">{{hardDrive.event.date | date : 'mediumDate'}}</td>
-    <td id="hard-drive-event-notes" ng-show="hardDrive.event.notes">{{hardDrive.event.notes}}</td>
+    <td id="hard-drive-event-location" ng-show="hardDrive.location">{{hardDrive.location}}</td>
+    <td id="hard-drive-event-date" ng-show="hardDrive.date">{{hardDrive.date | date : 'mediumDate'}}</td>
+    <td id="hard-drive-event-notes" ng-show="hardDrive.note">{{hardDrive.eventnote}}</td>
   </tr>
 </table>  
 
