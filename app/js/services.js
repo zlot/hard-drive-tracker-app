@@ -21,23 +21,32 @@ angular.module('myApp.services', [])
     };
   })
   
-  .factory("api", ["$http", function($http) {
-    var baseURI = 'http://localhost:4567/api/';
+  .factory("api", ["$http", "Restangular", function($http, Restangular) {
+    var baseUrl = 'http://localhost:4568/api/';
+    Restangular.setBaseUrl(baseUrl);
+    
+    
+    
+    /* All return promises */
     return {
       getHardDrives: function() {
-        return $http.get(baseURI + 'harddrives');
+        return Restangular.all('harddrives').getList();
       },
       getEvents: function() {
-        return $http.get(baseURI + 'events');
+        return Restangular.all('events').getList();
+        // return $http.get(baseURI + 'events');
       },
       getEvent: function(eventid) {
-        return $http.get(baseURI + 'events/' + eventid);
+        return Restangular.one('events',eventid).get();
+        // return $http.get(baseURI + 'events/' + eventid);
       },
       createEvent: function(eventObject) {
-        return $http.post(baseURI + 'events', eventObject);
+        var events = Restangular.all('events');
+        return events.post(eventObject);
+        // return $http.post(baseURI + 'events', eventObject);
       },
       updateEvent: function(eventid, eventObject) {
-        return $http.put(baseURI + 'events/' + eventid, eventObject);
+        return $http.put(baseUrl + 'events/' + eventid, eventObject);
       }
      
     };

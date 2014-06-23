@@ -25,8 +25,10 @@ angular.module('myApp.controllers', [])
     // API returns a promise which we must return asynchronously using then().
     function bindScope() {
       api.getHardDrives().then(function(resp) {
+        
+        // console.log(resp);
         $scope.loadedBool = true;
-        $scope.hardDrives = resp.data;
+        $scope.hardDrives = resp;
         // for each harddrive:
         for(var i=0;i<$scope.hardDrives.length;i++) {
           /* to get i inside the promise, we must capture i in a closure!
@@ -37,9 +39,9 @@ angular.module('myApp.controllers', [])
           (function(i) {
             if($scope.hardDrives[i].current_eventid !== null) { 
               api.getEvent($scope.hardDrives[i].current_eventid).then(function(resp) {
-                $scope.hardDrives[i].location = resp.data.location;
-                $scope.hardDrives[i].date = resp.data.date;
-                $scope.hardDrives[i].eventnote = resp.data.note;
+                $scope.hardDrives[i].location = resp.location;
+                $scope.hardDrives[i].date = resp.date;
+                $scope.hardDrives[i].eventnote = resp.note;
               });
             }
           })(i);
@@ -85,7 +87,7 @@ angular.module('myApp.controllers', [])
     api.getEvents().then(function(resp) {
       // show preloader until data is loaded.
       $scope.loadedBool = true;
-      $scope.eventLog = resp.data;
+      $scope.eventLog = resp;
     });
     
     // cheap way of setting active class on navigation

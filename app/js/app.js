@@ -25,5 +25,5 @@ config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvide
   $routeProvider.otherwise({redirectTo: '/'});
   
   //Enable cross domain calls
-  $httpProvider.defaults.useXDomain = true;
+  // $httpProvider.defaults.useXDomain = true;
 }]);
